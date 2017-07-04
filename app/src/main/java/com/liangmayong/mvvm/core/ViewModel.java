@@ -144,25 +144,23 @@ public class ViewModel {
             boolean isChanged = false;
             for (int i = 0; i < fieldList.size(); i++) {
                 boolean flag;
-                Object newValue = null;
-                Object oldValue = null;
+                Object newValue;
+                Object oldValue;
                 try {
                     newValue = fieldList.get(i).get(object);
                 } catch (Exception e) {
+                    newValue = null;
                 }
                 try {
                     oldValue = valueList.get(i);
                 } catch (Exception e) {
+                    oldValue = null;
                 }
                 if (newValue == null && oldValue == null) {
                     flag = false;
                 } else {
                     if (newValue != null && newValue.equals(oldValue)) {
-                        if (level > 0) {
-                            flag = isValueChanged(newValue, level - 1);
-                        } else {
-                            flag = false;
-                        }
+                        flag = level > 0 && isValueChanged(newValue, level - 1);
                     } else {
                         flag = true;
                     }
@@ -177,10 +175,9 @@ public class ViewModel {
         }
     }
 
-
-    public static <T extends ViewModel> T createModel(ViewInterface<T> object) {
-        Class<?> modelClass = getModelClass(object);
+    static <T extends ViewModel> T createModel(ViewInterface<T> object) {
         try {
+            Class<?> modelClass = getModelClass(object);
             Constructor constructor = modelClass.getConstructor(ViewInterface.class);
             return (T) constructor.newInstance(object);
         } catch (Exception e) {
@@ -205,7 +202,6 @@ public class ViewModel {
     private static Class<?> getRawType(Type type) {
         if (type instanceof Class<?>) {
             return (Class<?>) type;
-
         } else if (type instanceof ParameterizedType) {
             ParameterizedType parameterizedType = (ParameterizedType) type;
             Type rawType = parameterizedType.getRawType();

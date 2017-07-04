@@ -3,10 +3,8 @@ package com.liangmayong.mvvm.core;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.SparseArray;
 import android.view.View;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by LiangMaYong on 2017/6/30.
@@ -14,7 +12,7 @@ import java.util.Map;
 public abstract class ViewActivity<Model extends ViewModel> extends AppCompatActivity implements ViewInterface<Model> {
 
     private Model model = null;
-    private Map<Integer, View> viewMap = new HashMap<>();
+    private SparseArray<View> viewSparseArray = new SparseArray<>();
 
     public Model getViewModel() {
         return model;
@@ -29,13 +27,10 @@ public abstract class ViewActivity<Model extends ViewModel> extends AppCompatAct
     public void notifyDataSetChanged() {
         if (getViewModel() != null) {
             int viewType = getViewModel().viewType;
-            View view = null;
-            if (viewMap.containsKey(viewType)) {
-                view = viewMap.get(viewType);
-            }
+            View view = viewSparseArray.get(viewType);
             if (view == null) {
                 view = onCreateView(viewType);
-                viewMap.put(viewType, view);
+                viewSparseArray.put(viewType, view);
             }
             if (view != null && view.getParent() == null) {
                 setContentView(view);
@@ -62,4 +57,9 @@ public abstract class ViewActivity<Model extends ViewModel> extends AppCompatAct
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        viewSparseArray.clear();
+    }
 }
