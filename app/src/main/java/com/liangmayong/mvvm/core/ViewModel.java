@@ -21,7 +21,6 @@ import java.util.concurrent.Executors;
 /**
  * Created by LiangMaYong on 2017/7/4.
  */
-
 public class ViewModel {
 
     private static String[] baseFields = {"viewType"};
@@ -40,12 +39,12 @@ public class ViewModel {
         notifyDataSetChanged();
     }
 
-    protected void onResume() {
+    void onResume() {
         isRun = true;
         notifyDataSetChanged();
     }
 
-    protected void onPause() {
+    void onPause() {
         isRun = false;
         handler.removeCallbacksAndMessages(null);
     }
