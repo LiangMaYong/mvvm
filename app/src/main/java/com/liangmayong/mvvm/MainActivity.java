@@ -8,9 +8,9 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.liangmayong.mvvm.core.ViewModelActivity;
+import com.liangmayong.mvvm.core.ViewActivity;
 
-public class MainActivity extends ViewModelActivity<MainViewModel> {
+public class MainActivity extends ViewActivity<MainViewModel> {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

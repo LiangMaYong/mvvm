@@ -31,10 +31,10 @@ public class ViewModel {
     private boolean isRun = false;
     private boolean checking = false;
     private Handler handler = new Handler();
-    private ViewModelInterface viewModelInterface;
+    private ViewInterface viewModelInterface;
     public int viewType = 0;
 
-    public ViewModel(ViewModelInterface viewModelInterface) {
+    public ViewModel(ViewInterface viewModelInterface) {
         this.viewModelInterface = viewModelInterface;
         notifyDataSetChanged();
     }
@@ -178,10 +178,10 @@ public class ViewModel {
     }
 
 
-    public static <T extends ViewModel> T createModel(ViewModelInterface<T> object) {
+    public static <T extends ViewModel> T createModel(ViewInterface<T> object) {
         Class<?> modelClass = getModelClass(object);
         try {
-            Constructor constructor = modelClass.getConstructor(ViewModelInterface.class);
+            Constructor constructor = modelClass.getConstructor(ViewInterface.class);
             return (T) constructor.newInstance(object);
         } catch (Exception e) {
         }

@@ -1,7 +1,7 @@
 package com.liangmayong.mvvm;
 
 import com.liangmayong.mvvm.core.ViewModel;
-import com.liangmayong.mvvm.core.ViewModelInterface;
+import com.liangmayong.mvvm.core.ViewInterface;
 
 /**
  * Created by LiangMaYong on 2017/7/4.
@@ -9,7 +9,7 @@ import com.liangmayong.mvvm.core.ViewModelInterface;
 
 public class MainViewModel extends ViewModel {
 
-    public MainViewModel(ViewModelInterface viewModelInterface) {
+    public MainViewModel(ViewInterface viewModelInterface) {
         super(viewModelInterface);
     }
 

@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * Created by LiangMaYong on 2017/6/30.
  */
-public abstract class ViewModelActivity<Model extends ViewModel> extends AppCompatActivity implements ViewModelInterface<Model> {
+public abstract class ViewActivity<Model extends ViewModel> extends AppCompatActivity implements ViewInterface<Model> {
 
     private Model model = null;
     private Map<Integer, View> viewMap = new HashMap<>();
@@ -24,12 +24,11 @@ public abstract class ViewModelActivity<Model extends ViewModel> extends AppComp
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         model = ViewModel.createModel(this);
-        notifyDataSetChanged();
     }
 
     public void notifyDataSetChanged() {
-        if (model != null) {
-            int viewType = model.viewType;
+        if (getViewModel() != null) {
+            int viewType = getViewModel().viewType;
             View view = null;
             if (viewMap.containsKey(viewType)) {
                 view = viewMap.get(viewType);
@@ -50,13 +49,17 @@ public abstract class ViewModelActivity<Model extends ViewModel> extends AppComp
     @Override
     protected void onResume() {
         super.onResume();
-        getViewModel().onResume();
+        if (getViewModel() != null) {
+            getViewModel().onResume();
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        getViewModel().onPause();
+        if (getViewModel() != null) {
+            getViewModel().onPause();
+        }
     }
 
 }

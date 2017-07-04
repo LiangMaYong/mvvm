@@ -5,7 +5,7 @@ import android.view.View;
 /**
  * Created by LiangMaYong on 2017/6/30.
  */
-public interface ViewModelInterface<Model extends ViewModel> {
+public interface ViewInterface<Model extends ViewModel> {
 
     void notifyDataSetChanged();
 
