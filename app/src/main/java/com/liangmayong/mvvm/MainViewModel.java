@@ -1,7 +1,7 @@
 package com.liangmayong.mvvm;
 
-import com.liangmayong.mvvm.core.ViewModel;
 import com.liangmayong.mvvm.core.ViewInterface;
+import com.liangmayong.mvvm.core.ViewModel;
 
 /**
  * Created by LiangMaYong on 2017/7/4.
@@ -28,8 +28,8 @@ public class MainViewModel extends ViewModel {
         public Text text = new Text();
 
 
-        public static class Text{
-           public String text = "nihao";
+        public static class Text {
+            public String text = "nihao";
         }
     }
 }

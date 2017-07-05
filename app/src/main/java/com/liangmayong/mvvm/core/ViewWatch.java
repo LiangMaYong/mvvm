@@ -63,16 +63,7 @@ public class ViewWatch {
                     flag = false;
                 } else {
                     if (newValue != null && newValue.equals(oldValue)) {
-                        if (checkClassMap.containsKey(object.getClass())) {
-                            List<Class> classes = checkClassMap.get(object.getClass());
-                            if (classes.contains(newValue.getClass())) {
-                                flag = isValueChanged(newValue);
-                            } else {
-                                flag = false;
-                            }
-                        } else {
-                            flag = false;
-                        }
+                        flag = isValueChanged(newValue, 1);
                     } else {
                         flag = true;
                     }
@@ -87,7 +78,7 @@ public class ViewWatch {
         }
     }
 
-    private boolean isValueChanged(Object targetValue) {
+    private boolean isValueChanged(Object targetValue, int level) {
         if (!objectInitMap.containsKey(targetValue) || !objectInitMap.get(targetValue)) {
             Pair<List<Field>, List<Object>> pair = getFields(targetValue);
             objectFieldMap.put(targetValue.getClass(), pair.first);
@@ -115,10 +106,12 @@ public class ViewWatch {
                     flag = false;
                 } else {
                     if (newValue != null && newValue.equals(oldValue)) {
-                        if (checkClassMap.containsKey(object.getClass())) {
+                        if (level > 0) {
+                            flag = isValueChanged(newValue, level - 1);
+                        } else if (checkClassMap.containsKey(object.getClass())) {
                             List<Class> classes = checkClassMap.get(object.getClass());
                             if (classes.contains(newValue.getClass())) {
-                                flag = isValueChanged(newValue);
+                                flag = isValueChanged(newValue, level - 1);
                             } else {
                                 flag = false;
                             }

@@ -9,9 +9,7 @@ public interface ViewInterface<Model extends ViewModel> {
 
     void notifyDataSetChanged();
 
-    View onCreateView(int viewType);
-
-    void onUpdateView(int viewType, View view);
+    ViewHolder onCreateViewHolder(int viewType);
 
     Model getViewModel();
 

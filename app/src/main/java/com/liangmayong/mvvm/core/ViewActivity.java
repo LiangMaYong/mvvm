@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.SparseArray;
-import android.view.View;
 
 /**
  * Created by LiangMaYong on 2017/6/30.
@@ -12,7 +11,7 @@ import android.view.View;
 public abstract class ViewActivity<Model extends ViewModel> extends AppCompatActivity implements ViewInterface<Model> {
 
     private Model model = null;
-    private SparseArray<View> viewSparseArray = new SparseArray<>();
+    private SparseArray<ViewHolder> viewSparseArray = new SparseArray<>();
 
     public Model getViewModel() {
         return model;
@@ -26,34 +25,40 @@ public abstract class ViewActivity<Model extends ViewModel> extends AppCompatAct
 
     public void notifyDataSetChanged() {
         if (getViewModel() != null) {
+            ViewHolder viewHolder = getViewHolder();
+            viewHolder.onChanged();
+        }
+    }
+
+    public ViewHolder getViewHolder() {
+        if (getViewModel() != null) {
             int viewType = getViewModel().viewType;
-            View view = viewSparseArray.get(viewType);
+            ViewHolder view = viewSparseArray.get(viewType);
             if (view == null) {
-                view = onCreateView(viewType);
+                view = onCreateViewHolder(viewType);
                 viewSparseArray.put(viewType, view);
             }
-            if (view != null && view.getParent() == null) {
-                setContentView(view);
+            if (view != null && view.getView() != null && view.getView().getParent() == null) {
+                setContentView(view.getView());
             }
-            if (view != null) {
-                onUpdateView(viewType, view);
-            }
+            return view;
         }
+        return null;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (getViewModel() != null) {
-            getViewModel().onResume();
+        if (getViewHolder() != null) {
+            getViewHolder().onResume();
         }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (getViewModel() != null) {
-            getViewModel().onPause();
+        if (getViewHolder() != null) {
+            getViewHolder().onPause();
         }
     }
 
