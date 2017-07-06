@@ -1,6 +1,6 @@
 package com.liangmayong.mvvm;
 
-import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -15,43 +15,58 @@ import com.liangmayong.mvvm.core.bind.BindButtonModel;
 import com.liangmayong.mvvm.core.bind.BindRelativeLayoutModel;
 import com.liangmayong.mvvm.core.bind.BindTextViewModel;
 
-public class MainActivity extends ViewActivity<MainViewModel> {
+public class MainActivity extends ViewActivity {
+
     ActivityMainViewHolder viewHolder;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getViewModel().user.text.text = "你好";
-        getViewModel().user.age = "25";
-        getViewModel().buttonText = "点击更新文本";
+        viewHolder = new ActivityMainViewHolder(this, R.layout.activity_main);
+        bindViewHolder(viewHolder);
+        viewHolder.viewModel.text.text = "123";
     }
 
-    @Override
-    public ViewHolder onCreateViewHolder(int viewType) {
-        View view = LayoutInflater.from(this).inflate(R.layout.activity_main, null);
-        return new ActivityMainViewHolder(view);
-    }
-
-    private class ActivityMainViewHolder implements ViewHolder {
+    public class ActivityMainViewHolder implements ViewHolder, View.OnClickListener {
 
         // ActivityMainViewHolder create by activity_main.xml
 
         public View view;
-        public ActivityMainViewModel model;
+        public ActivityMainViewModel viewModel;
         public TextView text;
         public Button button;
         public RelativeLayout activity_main;
 
-        public ActivityMainViewHolder(Activity activity) {
-            this(activity.getWindow().getDecorView());
+        public ActivityMainViewHolder(Context context, int layoutId) {
+            this(LayoutInflater.from(context).inflate(layoutId, null));
         }
 
         public ActivityMainViewHolder(View view) {
             this.view = view;
             this.text = (TextView) view.findViewById(R.id.text);
             this.button = (Button) view.findViewById(R.id.button);
+            this.button.setOnClickListener(this);
             this.activity_main = (RelativeLayout) view.findViewById(R.id.activity_main);
-            this.model = new ActivityMainViewModel(this);
+            this.viewModel = new ActivityMainViewModel(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.button:
+                    viewModel.button.text = "点击了按钮";
+                    break;
+            }
+        }
+
+        @Override
+        public void onResume() {
+            this.viewModel.resume();
+        }
+
+        @Override
+        public void onPause() {
+            this.viewModel.pause();
         }
 
         @Override
@@ -59,56 +74,34 @@ public class MainActivity extends ViewActivity<MainViewModel> {
             return view;
         }
 
-        @Override
-        public void onChanged() {
-            this.model.bind();
+        public class ActivityMainViewModel {
+
+            // ActivityMainViewModel create by activity_main.xml
+
+            public ActivityMainViewHolder viewHolder;
+            public BindTextViewModel text;
+            public BindButtonModel button;
+            public BindRelativeLayoutModel activity_main;
+
+            public ActivityMainViewModel(ActivityMainViewHolder viewHolder) {
+                this.viewHolder = viewHolder;
+                this.text = new BindTextViewModel(viewHolder.text);
+                this.button = new BindButtonModel(viewHolder.button);
+                this.activity_main = new BindRelativeLayoutModel(viewHolder.activity_main);
+            }
+
+            void resume() {
+                this.text.onResume();
+                this.button.onResume();
+                this.activity_main.onResume();
+            }
+
+            void pause() {
+                this.text.onPause();
+                this.button.onPause();
+                this.activity_main.onPause();
+            }
+
         }
-
-        @Override
-        public void onResume() {
-            this.model.resume();
-        }
-
-        @Override
-        public void onPause() {
-            this.model.pause();
-        }
-
-    }
-
-    public class ActivityMainViewModel {
-
-        // ActivityMainViewModel create by activity_main.xml
-
-        public ActivityMainViewHolder holder;
-        public BindTextViewModel text;
-        public BindButtonModel button;
-        public BindRelativeLayoutModel activity_main;
-
-        public ActivityMainViewModel(ActivityMainViewHolder holder) {
-            this.holder = holder;
-            this.text = new BindTextViewModel(holder.text);
-            this.button = new BindButtonModel(holder.button);
-            this.activity_main = new BindRelativeLayoutModel(holder.activity_main);
-        }
-
-        void bind() {
-            this.text.bindData(holder.text);
-            this.button.bindData(holder.button);
-            this.activity_main.bindData(holder.activity_main);
-        }
-
-        void resume() {
-            this.text.onResume();
-            this.button.onResume();
-            this.activity_main.onResume();
-        }
-
-        void pause() {
-            this.text.onPause();
-            this.button.onPause();
-            this.activity_main.onPause();
-        }
-
     }
 }

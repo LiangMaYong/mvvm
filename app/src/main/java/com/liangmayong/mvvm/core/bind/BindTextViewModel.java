@@ -19,8 +19,8 @@ public class BindTextViewModel extends BindViewModel {
     }
 
     @Override
-    public void bindData(View view) {
-        super.bindData(view);
+    public void onChanged(View view) {
+        super.onChanged(view);
         if (view instanceof TextView) {
             TextView textView = (TextView) view;
             textView.setText(text);

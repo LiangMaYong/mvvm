@@ -10,8 +10,6 @@ public interface ViewHolder {
 
     View getView();
 
-    void onChanged();
-
     void onResume();
 
     void onPause();

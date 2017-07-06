@@ -2,6 +2,8 @@ package com.liangmayong.mvvm.core;
 
 import android.util.Pair;
 
+import com.liangmayong.mvvm.core.bind.BaseBindModel;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,7 +15,6 @@ import java.util.Map;
  */
 public class ViewWatch {
 
-    private static String[] baseFields = {"viewType"};
     private static Map<Class, List<Class>> checkClassMap = new HashMap<>();
 
     private Map<Object, Boolean> objectInitMap = new HashMap<>();
@@ -152,25 +153,13 @@ public class ViewWatch {
             return Pair.create(fieldList, valueList);
         } else {
             Class clazz;
-            for (clazz = object.getClass(); clazz != ViewModel.class && clazz != null; clazz = clazz.getSuperclass()) {
+            for (clazz = object.getClass(); clazz != BaseBindModel.class && clazz != null; clazz = clazz.getSuperclass()) {
                 Field[] fields = clazz.getDeclaredFields();
                 for (int i = 0; i < fields.length; i++) {
                     fields[i].setAccessible(true);
                     fieldList.add(fields[i]);
                     try {
                         valueList.add(fields[i].get(object));
-                    } catch (Exception e) {
-                        valueList.add(null);
-                    }
-                }
-            }
-            if (clazz == ViewModel.class) {
-                for (int i = 0; i < baseFields.length; i++) {
-                    try {
-                        Field field = clazz.getDeclaredField(baseFields[i]);
-                        field.setAccessible(true);
-                        fieldList.add(field);
-                        valueList.add(field.get(object));
                     } catch (Exception e) {
                         valueList.add(null);
                     }
