@@ -54,7 +54,9 @@ public class MainActivity extends ViewActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.button:
+                    viewModel.text.text = "你好呀！";
                     viewModel.button.text = "点击了按钮";
+                    viewModel.button.background = getResources().getDrawable(R.mipmap.ic_launcher);
                     break;
             }
         }

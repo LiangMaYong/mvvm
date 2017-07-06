@@ -1,5 +1,7 @@
 package com.liangmayong.mvvm.core.bind;
 
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.view.View;
 
 /**
@@ -8,15 +10,21 @@ import android.view.View;
 public class BindViewModel extends BaseBindModel {
 
     public int visibility = View.VISIBLE;
-    public int backgroundColor = 0x00ffffff;
+    public Drawable background = null;
 
     public BindViewModel(View view) {
         super(view);
         this.visibility = view.getVisibility();
+        this.background = view.getBackground();
     }
 
     public void onChanged(View view) {
         setVisibility(view, visibility);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            view.setBackground(background);
+        } else {
+            view.setBackgroundDrawable(background);
+        }
     }
 
     private void setVisibility(View view, int visibility) {
